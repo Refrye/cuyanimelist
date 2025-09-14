@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+img {
+    width: 100%;
+    height: auto;
+    transition: .3s ease all;
+}
+
+img:hover {
+   transform: scale(1.02);
+}
