@@ -10,7 +10,7 @@ const AnimeList = ({ title, images, id }) => {
           alt={title} 
           width={200} 
           height={300} 
-          className="mx-auto rounded"
+          className="mx-auto rounded max-h-64 object-cover"
         />
         <h2 className="mt-2 md:text-xl text-white font-semibold">{title}</h2>
       </div>
