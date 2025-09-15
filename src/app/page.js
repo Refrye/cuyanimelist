@@ -1,42 +1,74 @@
 import Link from "next/link";
-import AnimeList from "@/app/components/animeList";
+import AnimeList from "@/components/animeList";
 
 const Home = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/top/anime?limit=8`,
-    {
-      cache: "no-store", // biar data selalu fresh
+    // fallback ke Jikan API jika env var tidak diset
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.jikan.moe/v4";
+
+    let anime = null;
+    try {
+        const response = await fetch(`${baseUrl}/top/anime?limit=8`, {
+            cache: "no-store", // biar data selalu fresh
+        });
+
+        if (!response.ok) {
+            throw new Error(`API responded with ${response.status}`);
+        }
+
+        anime = await response.json();
+    } catch (err) {
+        // Log error ke server console (Next.js server)
+        console.error("Failed to fetch popular anime:", err);
     }
-  );
 
-  const anime = await response.json();
+    // Jika fetch gagal, tampilkan UI pemberitahuan agar tidak crash
+    if (!anime || !Array.isArray(anime.data)) {
+        return (
+            <div className="p-6 max-w-7xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold">Paling Populer</h1>
+                    <Link
+                        href="/populer"
+                        className="text-indigo-600 hover:text-indigo-800 underline transition"
+                    >
+                        Lihat Semua
+                    </Link>
+                </div>
 
-  return (
-    <div className="p-6 max-w-7xl mx-auto">
-      {/* Header + Lihat Semua */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Paling Populer</h1>
-        <Link
-          href="/populer"
-          className="text-indigo-600 hover:text-indigo-800 underline transition"
-        >
-          Lihat Semua
-        </Link>
-      </div>
+                <div className="p-6 bg-red-50 border border-red-200 rounded">
+                    <p className="text-red-600">Gagal memuat data anime. Silakan periksa koneksi atau konfigurasi API.</p>
+                    <p className="text-sm text-gray-600 mt-2">Coba set environment variable <code>NEXT_PUBLIC_API_BASE_URL</code> atau periksa apakah API eksternal sedang down.</p>
+                </div>
+            </div>
+        );
+    }
 
-      {/* Grid anime populer */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {anime.data.map((data) => (
-          <AnimeList
-            key={data.mal_id}
-            id={data.mal_id}
-            title={data.title}
-            images={data.images.webp.image_url}
-          />
-        ))}
-      </div>
-    </div>
-  );
+    return (
+        <div className="p-6 max-w-7xl mx-auto">
+            {/* Header + Lihat Semua */}
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold">Paling Populer</h1>
+                <Link
+                    href="/populer"
+                    className="text-indigo-600 hover:text-indigo-800 underline transition"
+                >
+                    Lihat Semua
+                </Link>
+            </div>
+
+            {/* Grid anime populer */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {anime.data.map((data) => (
+                    <AnimeList
+                        key={data.mal_id}
+                        id={data.mal_id}
+                        title={data.title}
+                        images={data.images.webp.image_url}
+                    />
+                ))}
+            </div>
+        </div>
+    );
 };
 
 export default Home;
