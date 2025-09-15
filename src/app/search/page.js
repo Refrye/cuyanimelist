@@ -43,6 +43,8 @@ return (
             id={data.mal_id}
             title={data.title}
             images={data.images.webp.image_url}
+            synopsis={data.synopsis || "Sinopsis tidak tersedia."}
+            trailerUrl={data.trailer?.embed_url || null}
         />
         ))}
     </div>

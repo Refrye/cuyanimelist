@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AnimeList from "@/components/animeList";
+import { Button } from "@/components/ui/button";
 
 const Home = async () => {
     // fallback ke Jikan API jika env var tidak diset
@@ -27,12 +28,11 @@ const Home = async () => {
             <div className="p-6 max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold">Paling Populer</h1>
-                    <Link
-                        href="/populer"
-                        className="text-indigo-600 hover:text-indigo-800 underline transition"
-                    >
-                        Lihat Semua
-                    </Link>
+                    <Button asChild variant="outline">
+                        <Link href="/populer">
+                            Lihat Semua
+                        </Link>
+                    </Button>
                 </div>
 
                 <div className="p-6 bg-red-50 border border-red-200 rounded">
@@ -48,12 +48,11 @@ const Home = async () => {
             {/* Header + Lihat Semua */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Paling Populer</h1>
-                <Link
-                    href="/populer"
-                    className="text-indigo-600 hover:text-indigo-800 underline transition"
-                >
-                    Lihat Semua
-                </Link>
+                <Button asChild variant="outline">
+                    <Link href="/populer">
+                        Lihat Semua
+                    </Link>
+                </Button>
             </div>
 
             {/* Grid anime populer */}
