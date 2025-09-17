@@ -56,11 +56,11 @@ const AnimeDetail = async ({ params }) => {
 
         {/* Info Utama */}
         <div className="flex-1 space-y-4">
-          <h1 className="text-3xl font-bold">{data.title}</h1>
-          <p className="text-gray-600 italic">{data.title_japanese}</p>
-          <p className="text-gray-800">{data.synopsis}</p>
+          <h1 className="text-3xl font-bold text-foreground">{data.title}</h1>
+          <p className="text-gray-600 dark:text-gray-400 italic">{data.title_japanese}</p>
+          <p className="text-gray-800 dark:text-gray-200">{data.synopsis}</p>
 
-          <ul className="text-sm space-y-1">
+          <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
             <li><strong>Episodes:</strong> {data.episodes || "N/A"}</li>
             <li><strong>Status:</strong> {data.status}</li>
             <li><strong>Score:</strong> {data.score || "Not Rated"}</li>
@@ -72,7 +72,7 @@ const AnimeDetail = async ({ params }) => {
             <DialogTrigger asChild>
               <Button variant="outline">Lihat Detail</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg">
+            <DialogContent className="max-w-lg bg-background text-foreground">
               <DialogHeader>
                 <DialogTitle>Info Detail</DialogTitle>
                 <DialogDescription>
@@ -112,7 +112,7 @@ const AnimeDetail = async ({ params }) => {
         </Card>
       )}
     </div>
-  );
+);
 };
 
 export default AnimeDetail;
