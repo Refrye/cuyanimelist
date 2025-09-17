@@ -2,21 +2,13 @@ import Link from "next/link";
 import AnimeList from "@/components/animeList";
 import { Button } from "@/components/ui/button";
 
+import { apiFetch } from "@/lib/api";
+
 const Home = async () => {
-    // fallback ke Jikan API jika env var tidak diset
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.jikan.moe/v4";
 
     let anime = null;
     try {
-        const response = await fetch(`${baseUrl}/top/anime?limit=8`, {
-            cache: "no-store", // biar data selalu fresh
-        });
-
-        if (!response.ok) {
-            throw new Error(`API responded with ${response.status}`);
-        }
-
-        anime = await response.json();
+        anime = await apiFetch("/top/anime?limit=8");
     } catch (err) {
         // Log error ke server console (Next.js server)
         console.error("Failed to fetch popular anime:", err);

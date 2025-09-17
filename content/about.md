@@ -55,7 +55,7 @@ export const themes = [
 ]
 ```
 
-### Modifikasi Komponen
+### 📳 Modifikasi Komponen
 Semua komponen shadcn/ui dapat dimodifikasi dengan mudah melalui file komponen di `src/components/ui/`
 
 ## 🚀 Deployment
@@ -77,7 +77,7 @@ Kontribusi selalu diterima! Silakan:
 
 ## 📄 Lisensi
 
-Project ini dibuat untuk tujuan edukasi dan bukan affiliated dengan MyAnimeList atau Jikan API. Data yang ditampilkan merupakan properti dari MyAnimeList dan konten creator terkait.
+> Project ini dibuat untuk tujuan edukasi dan bukan affiliated dengan MyAnimeList atau Jikan API. Data yang ditampilkan merupakan properti dari MyAnimeList dan konten creator terkait.
 
 ---
 
