@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { apiFetch } from "@/lib/api";
+import { getAnimeResponse } from "@/lib/api";
 
 const GenresPage = async () => {
   let genres = null;
   try {
-    genres = await apiFetch("/genres/anime");
+    genres = await getAnimeResponse("genres/anime");
   } catch (err) {
     console.error("Failed to fetch genres:", err);
   }

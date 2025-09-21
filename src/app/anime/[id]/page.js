@@ -13,7 +13,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { apiFetch } from "@/lib/api";
+import { getAnimeResponse } from "@/lib/api";
 
 // ini halaman detail anime (SERVER COMPONENT)
 const AnimeDetail = async ({ params }) => {
@@ -21,7 +21,7 @@ const AnimeDetail = async ({ params }) => {
 
   let data = null;
   try {
-    const response = await apiFetch(`/anime/${id}`);
+    const response = await getAnimeResponse(`anime/${id}`);
     data = response.data;
   } catch (err) {
     console.error("Failed to fetch anime details:", err);

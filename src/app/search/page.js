@@ -1,5 +1,5 @@
 import AnimeList from "@/components/animeList";
-import { apiFetch } from "@/lib/api";
+import { getAnimeResponse } from "@/lib/api";
 
 const SearchPage = async ({ searchParams }) => {
 // ambil query dari URL
@@ -22,18 +22,18 @@ try {
     if (isGenreQuery) {
         const genreName = query.slice(6); // Remove "genre:" prefix
         // Fetch genres to get genre ID
-        const genres = await apiFetch("/genres/anime");
+        const genres = await getAnimeResponse("genres/anime");
         const genre = genres.data.find(g => g.name.toLowerCase() === genreName.toLowerCase());
         if (genre) {
             // Fetch anime by genre ID
-            anime = await apiFetch(`/anime?genres=${genre.mal_id}&limit=12`);
+            anime = await getAnimeResponse(`anime?genres=${genre.mal_id}&limit=12`);
         } else {
             // Genre not found
             anime = { data: [] };
         }
     } else {
         // Regular search
-        anime = await apiFetch(`/anime?q=${encodeURIComponent(query)}&limit=12`);
+        anime = await getAnimeResponse(`anime?q=${encodeURIComponent(query)}&limit=12`);
     }
 } catch (err) {
     console.error("Search fetch failed:", err);
@@ -57,7 +57,7 @@ return (
             key={data.mal_id}
             id={data.mal_id}
             title={data.title}
-            images={data.images.webp.image_url}
+            images={data.images?.webp?.image_url || data.images?.jpg?.image_url || "/placeholder.jpg"}
             synopsis={data.synopsis || "Sinopsis tidak tersedia."}
             trailerUrl={data.trailer?.embed_url || null}
         />

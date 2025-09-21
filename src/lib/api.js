@@ -1,26 +1,21 @@
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.jikan.moe/v4";
+export const getAnimeResponse = async(resource, query) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${resource}?${query}`)
+    const anime = await response.json()
+    return anime
+}
 
-/**
- * Reusable API call function
- * @param {string} endpoint - API endpoint path, e.g. "/top/anime?limit=8"
- * @param {object} options - fetch options
- * @returns {Promise<object>} - parsed JSON response
- */
+export const getNestedAnimeResponse = async(resource, objectProperty) => {
+    const response = await getAnimeResponse(resource)
+    return response.data.flatMap(item => item[objectProperty])
+}
 
-export async function apiFetch(endpoint, options = {}) {
-  const url = baseUrl + endpoint;
-  try {
-    const response = await fetch(url, {
-      cache: "no-store",
-      ...options,
-    });
-    if (!response.ok) {
-      throw new Error(`API responded with status ${response.status}`);
+export const reproduce = (data, gap) => {
+    const first = ~~(Math.random() * (data.length - gap) + 1)
+    const last = first + gap
+
+    const response = {
+        data: data.slice(first, last)
     }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("API fetch error:", error);
-    throw error;
-  }
+
+    return response
 }

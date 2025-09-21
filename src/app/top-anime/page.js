@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
-import { apiFetch } from "@/lib/api";
+import { getAnimeResponse } from "@/lib/api";
 
 const TopAnimePage = async ({ searchParams }) => {
   const currentPage = Number(searchParams.page) || 1;
@@ -16,7 +16,7 @@ const TopAnimePage = async ({ searchParams }) => {
 
   let anime = null;
   try {
-    anime = await apiFetch(`/top/anime?page=${currentPage}&limit=${limit}`);
+    anime = await getAnimeResponse(`top/anime?page=${currentPage}&limit=${limit}`);
   } catch (err) {
     console.error("Failed to fetch top anime:", err);
   }
@@ -43,7 +43,7 @@ const TopAnimePage = async ({ searchParams }) => {
             key={data.mal_id}
             id={data.mal_id}
             title={data.title}
-            images={data.images.webp.image_url}
+            images={data.images?.webp?.image_url || data.images?.jpg?.image_url || "/placeholder.jpg"}
           />
         ))}
       </div>
