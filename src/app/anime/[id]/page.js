@@ -1,12 +1,9 @@
 import React from "react";
 import Image from "next/image";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Star, Flame, Heart, Crown, Calendar } from "lucide-react";
+
 import {
   Dialog,
   DialogTrigger,
@@ -16,18 +13,24 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { apiFetch } from "@/lib/api";
 
 // ini halaman detail anime (SERVER COMPONENT)
 const AnimeDetail = async ({ params }) => {
   const { id } = params;
 
-  const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`, {
-    cache: "no-store",
-  });
-  const { data } = await res.json();
+  let data = null;
+  try {
+    const response = await apiFetch(`/anime/${id}`);
+    data = response.data;
+  } catch (err) {
+    console.error("Failed to fetch anime details:", err);
+  }
 
   if (!data) {
-    return <p className="p-6 text-center text-gray-500">Anime tidak ditemukan.</p>;
+    return (
+      <p className="p-6 text-center text-gray-500">Anime tidak ditemukan.</p>
+    );
   }
 
   const imageUrl =
@@ -38,11 +41,11 @@ const AnimeDetail = async ({ params }) => {
   const trailer = data?.trailer;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-8">
-      <div className="flex flex-col md:flex-row gap-6">
+    <div className="max-w-6xl p-6 mx-auto space-y-8">
+      <div className="flex flex-col gap-6 md:flex-row">
         {/* Poster */}
         <div
-          className="w-full md:w-72 lg:w-80 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0"
+          className="relative flex-shrink-0 w-full overflow-hidden rounded-lg shadow-lg md:w-72 lg:w-80"
           style={{ aspectRatio: "2/3" }}
         >
           <Image
@@ -57,14 +60,80 @@ const AnimeDetail = async ({ params }) => {
         {/* Info Utama */}
         <div className="flex-1 space-y-4">
           <h1 className="text-3xl font-bold text-foreground">{data.title}</h1>
-          <p className="text-gray-600 dark:text-gray-400 italic">{data.title_japanese}</p>
+          <p className="italic text-gray-600 dark:text-gray-400">
+            {data.title_japanese}
+          </p>
           <p className="text-gray-800 dark:text-gray-200">{data.synopsis}</p>
 
-          <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
-            <li><strong>Episodes:</strong> {data.episodes || "N/A"}</li>
-            <li><strong>Status:</strong> {data.status}</li>
-            <li><strong>Score:</strong> {data.score || "Not Rated"}</li>
-            <li><strong>Year:</strong> {data.year || "Unknown"}</li>
+          {/* Card berisi statistik */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                <div className="flex flex-col items-center p-3 rounded-lg bg-muted">
+                  <span className="text-sm text-muted-foreground">
+                    <Star size={16} className="inline mr-1" />
+                    Rating
+                  </span>
+                  <span className="text-xl font-semibold">
+                    {data.rating || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center p-3 rounded-lg bg-muted">
+                  <span className="text-sm text-muted-foreground">
+                    <Crown size={16} className="inline mr-1" />
+                    Rank
+                  </span>
+                  <span className="text-xl font-semibold">
+                    {data.rank || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center p-3 rounded-lg bg-muted">
+                  <span className="text-sm text-muted-foreground">
+                    <Flame size={16} className="inline mr-1" />
+                    Popularity
+                  </span>
+                  <span className="text-xl font-semibold">
+                    {data.popularity || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center p-3 rounded-lg bg-muted">
+                  <span className="text-sm text-muted-foreground">
+                  <Calendar size={16} className="inline mr-1" />
+                    Season
+                  </span>
+                  <span className="text-xl font-semibold">
+                    {data.season || "N/A"}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center p-3 rounded-lg bg-muted">
+                  <span className="text-sm text-muted-foreground">
+                    <Heart size={16} className="inline mr-1" />
+                    Favorites
+                  </span>
+                  <span className="text-xl font-semibold">
+                    {data.favorites || "N/A"}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <ul className="space-y-1 text-sm text-gray-700 dark:text-gray-300">
+            <li>
+              <strong>Episodes:</strong> {data.episodes || "N/A"}
+            </li>
+            <li>
+              <strong>Duration:</strong> {data.duration || "N/A"}
+            </li>
+            <li>
+              <strong>Status:</strong> {data.status}
+            </li>
+            <li>
+              <strong>Score:</strong> {data.score || "Not Rated"}
+            </li>
+            <li>
+              <strong>Year:</strong> {data.year || "Unknown"}
+            </li>
           </ul>
 
           {/* Dialog untuk info detail */}
@@ -80,11 +149,24 @@ const AnimeDetail = async ({ params }) => {
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-3 text-sm">
-                <p><strong>Genres:</strong> {data.genres?.map(g => g.name).join(", ") || "Unknown"}</p>
-                <p><strong>Studios:</strong> {data.studios?.map(s => s.name).join(", ") || "Unknown"}</p>
-                <p><strong>Producers:</strong> {data.producers?.map(p => p.name).join(", ") || "Unknown"}</p>
-                <p><strong>Source:</strong> {data.source}</p>
-                <p><strong>Type:</strong> {data.type}</p>
+                <p>
+                  <strong>Genres:</strong>{" "}
+                  {data.genres?.map((g) => g.name).join(", ") || "Unknown"}
+                </p>
+                <p>
+                  <strong>Studios:</strong>{" "}
+                  {data.studios?.map((s) => s.name).join(", ") || "Unknown"}
+                </p>
+                <p>
+                  <strong>Producers:</strong>{" "}
+                  {data.producers?.map((p) => p.name).join(", ") || "Unknown"}
+                </p>
+                <p>
+                  <strong>Source:</strong> {data.source}
+                </p>
+                <p>
+                  <strong>Type:</strong> {data.type}
+                </p>
               </div>
             </DialogContent>
           </Dialog>
@@ -98,7 +180,7 @@ const AnimeDetail = async ({ params }) => {
             <CardTitle>Trailer</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="aspect-video rounded-lg overflow-hidden shadow-lg">
+            <div className="overflow-hidden rounded-lg shadow-lg aspect-video">
               <iframe
                 src={trailer.embed_url}
                 title="Anime Trailer"
@@ -112,7 +194,7 @@ const AnimeDetail = async ({ params }) => {
         </Card>
       )}
     </div>
-);
+  );
 };
 
 export default AnimeDetail;

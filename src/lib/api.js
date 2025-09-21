@@ -6,6 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.jikan.moe/v
  * @param {object} options - fetch options
  * @returns {Promise<object>} - parsed JSON response
  */
+
 export async function apiFetch(endpoint, options = {}) {
   const url = baseUrl + endpoint;
   try {
