@@ -11,12 +11,15 @@ import {
 import { getAnimeResponse } from "@/lib/api";
 
 const TopAnimePage = async ({ searchParams }) => {
-  const currentPage = Number(searchParams.page) || 1;
+  const currentPage = Number(searchParams?.page) || 1;
   const limit = 12;
 
   let anime = null;
   try {
-    anime = await getAnimeResponse(`top/anime?page=${currentPage}&limit=${limit}`);
+    anime = await getAnimeResponse("top/anime", {
+      page: currentPage,
+      limit,
+    });
   } catch (err) {
     console.error("Failed to fetch top anime:", err);
   }
@@ -43,7 +46,11 @@ const TopAnimePage = async ({ searchParams }) => {
             key={data.mal_id}
             id={data.mal_id}
             title={data.title}
-            images={data.images?.webp?.image_url || data.images?.jpg?.image_url || "/placeholder.jpg"}
+            images={
+              data.images?.webp?.image_url ||
+              data.images?.jpg?.image_url ||
+              "/placeholder.jpg"
+            }
           />
         ))}
       </div>
@@ -52,28 +59,21 @@ const TopAnimePage = async ({ searchParams }) => {
       <div className="mt-8 flex justify-center">
         <Pagination>
           <PaginationContent>
-            {/* Previous */}
             {currentPage > 1 && (
               <PaginationItem>
-                <PaginationPrevious
-                  href={`/top-anime?page=${currentPage - 1}`}
-                />
+                <PaginationPrevious href={`/top-anime?page=${currentPage - 1}`} />
               </PaginationItem>
             )}
 
-            {/* Current page */}
             <PaginationItem>
               <PaginationLink href={`/top-anime?page=${currentPage}`} isActive>
                 {currentPage}
               </PaginationLink>
             </PaginationItem>
 
-            {/* Next */}
             {hasNextPage && (
               <PaginationItem>
-                <PaginationNext
-                  href={`/top-anime?page=${currentPage + 1}`}
-                />
+                <PaginationNext href={`/top-anime?page=${currentPage + 1}`} />
               </PaginationItem>
             )}
           </PaginationContent>

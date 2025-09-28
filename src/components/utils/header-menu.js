@@ -2,66 +2,45 @@
 
 import * as React from "react";
 import Link from "next/link";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
 const HeaderMenu = () => {
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link href="/" className={cn("px-3 py-2")}>
-              Home
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Anime</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[200px] gap-2 p-3">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="/top-anime" className="block rounded-md p-2 hover:bg-accent">
-                    Top Anime
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="/seasonal" className="block rounded-md p-2 hover:bg-accent">
-                    Seasonal
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="/genres" className="block rounded-md p-2 hover:bg-accent">
-                    Genres
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link href="/about" className={cn("px-3 py-2")}>
-              About
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <div className="flex items-center space-x-4">
+      <Link href="/" className={cn("px-3 py-2 rounded-md hover:bg-accent")}>
+        Home
+      </Link>
+      
+      <div className="relative group">
+        <button className="px-3 py-2 rounded-md hover:bg-accent">
+          Anime
+        </button>
+        <div className="absolute left-0 mt-2 w-48 bg-background border rounded-md shadow-lg py-1 hidden group-hover:block z-50">
+          <Link 
+            href="/top-anime" 
+            className="block px-4 py-2 text-sm hover:bg-accent"
+          >
+            Top Anime
+          </Link>
+          <Link 
+            href="/seasonal" 
+            className="block px-4 py-2 text-sm hover:bg-accent"
+          >
+            Seasonal
+          </Link>
+          <Link 
+            href="/genres" 
+            className="block px-4 py-2 text-sm hover:bg-accent"
+          >
+            Genres
+          </Link>
+        </div>
+      </div>
+      
+      <Link href="/about" className={cn("px-3 py-2 rounded-md hover:bg-accent")}>
+        About
+      </Link>
+    </div>
   );
 };
 

@@ -11,7 +11,8 @@ import {
 import { getNestedAnimeResponse, reproduce } from "@/lib/api";
 
 const RecommendationsPage = async ({ searchParams }) => {
-  const currentPage = Number(searchParams.page) || 1;
+  const params = await searchParams;
+  const currentPage = Number(params.page) || 1;
   const limit = 12;
 
   let recommendations = null;
